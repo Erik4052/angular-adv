@@ -7,6 +7,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { Grafica1Component } from './grafica1/grafica1.component';
 import { ProgressComponent } from './progress/progress.component';
 import { SharedModule } from '../shared/shared.module';
+import { FormsModule } from '@angular/forms';
+import { ComponentsModule } from '../components/components.module';
 
 
 
@@ -16,9 +18,15 @@ import { SharedModule } from '../shared/shared.module';
     DashboardComponent,
     ProgressComponent,
     Grafica1Component,
-     PagesComponent
+    PagesComponent
   ],
-  imports: [CommonModule,SharedModule,AppRoutingModule],
+  imports: [
+    CommonModule,
+    SharedModule,
+    AppRoutingModule,
+    FormsModule,
+    ComponentsModule,
+  ],
   exports:[
     DashboardComponent,
     ProgressComponent,
