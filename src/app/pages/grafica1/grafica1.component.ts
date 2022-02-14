@@ -14,7 +14,7 @@ public labels1:string[] = [ 'Download Sales', 'In-Store Sales', 'Mail-Order Sale
 public data1: ChartData<'doughnut'> = {
   labels: this.labels1,
   datasets:[
-    {data:[350,450,100]}
+    {data:[950,450,100]}
   ]
 };
 

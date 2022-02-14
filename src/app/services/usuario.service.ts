@@ -17,8 +17,15 @@ declare const gapi:any;
 })
 export class UsuarioService {
   public auth2:any;
+  public usuario!: Usuario;
   constructor(private http:HttpClient,private router:Router, private ngZone:NgZone) {
     this.googleInit();
+   }
+   get token():string{
+    return localStorage.getItem('token') || ''
+   }
+   get uid():string{
+     return this.usuario.uid || '';
    }
 
   googleInit(){
@@ -45,16 +52,28 @@ export class UsuarioService {
    }
 
    validarToken():Observable<boolean>{
-     const token = localStorage.getItem('token') || '';
+     
       return this.http.get(`${base_url}/login/renew`, {
       headers: {
-        'x-token': token
+        'x-token': this.token
       }
      }).pipe(
-       tap( (response:any) => {
-        localStorage.setItem('token',response.token)
+       map( (response:any) => {
+         const {
+           email,
+           google,
+           nombre,
+           role,
+           img = '',
+           uid
+         } = response.usuario;
+         this.usuario = new Usuario(nombre,email,'',google,img,role,uid);
+         //this.usuario.imprimirUsuario();
+         //console.log(this.usuario);
+         localStorage.setItem('token',response.token);
+         return true;
        }),
-       map(response => true),
+       
        catchError(error => of(false))
      );
    }
@@ -69,6 +88,20 @@ export class UsuarioService {
                     })
                   );
    }
+
+  actualizarPerfil(data:{email:string,nombre:string,role:string}):Observable<any>{
+    data = {
+      ...data,
+      role:this.usuario.role || ''
+    };
+    return this.http.put<any>(`${base_url}/usuarios/${this.uid}`, data, {
+      headers: {
+        'x-token': this.token
+      }
+    })
+  }
+
+
    login(formData:LoginForm):Observable<Usuario>{
        
     return this.http.post<Usuario>(`${base_url}/login`, formData)
